@@ -8,6 +8,7 @@ The hard work is done via [PSProvider](http://psprovider.codeplex.com/)
 
 This:
 	> $ENV:PATH
+
 	C:\Program Files (x86)\Microsoft F#\v4.0\;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VSTSDB\Deploy;C:\Program
 	Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\;C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\BIN;C:\Pro
 	gram Files (x86)\Microsoft Visual Studio 10.0\Common7\Tools;C:\Windows\Microsoft.NET\Framework\v4.0.30319;C:\Windows\Mi
