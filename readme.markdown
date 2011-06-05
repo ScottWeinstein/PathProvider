@@ -1,6 +1,8 @@
 # PATHProvider
 
-A powershell provder for viewing and managing your $ENV:Path variable.
+A powershell provder for viewing and managing your $ENV:Path variable. 
+
+The hard work is done via [PSProvider](http://psprovider.codeplex.com/)
 
 ## Why?
 
@@ -46,6 +48,12 @@ vs
 	C:\Program Files (x86)\VisualSVN\bin
 	C:\Program Files (x86)\Git\bin\
 	C:\Ruby\bin
+
+# Supported provider actions:
+
+	get-childitem PATH:\
+	remove-item PATH:\"C:\Program Files (x86)\VisualSVN\bin"
+	New-Item -Path PATH:\ -Value C:\DevTools\
 
 # Install
 todo
