@@ -1,87 +1,38 @@
-# assumes DLL is in current directory
-ipmo .\PSProviderFramework.dll
+function Get-ScriptDirectory
+{
+    $Invocation = (Get-Variable MyInvocation -Scope 1).Value
+    Split-Path $Invocation.MyCommand.Path
+}
 
-# root parameter is mandatory, but you don't have to use it in your module script
-Remove-PSDrive -Name PATH
-new-psdrive -Name PATH -PSProvider containerscriptprovider -Root / -moduleinfo $(new-module -name PathProvider {
+Import-Module "$(Get-ScriptDirectory)\PSProviderFramework.dll"
 
+if ([bool](Get-PSDrive PATHs -ErrorAction SilentlyContinue))
+{
+    Remove-PSDrive -Name PATH
+}
+
+New-PSDrive -Name PATH -PSProvider containerscriptprovider -Root / -moduleinfo $(new-module -name PathProvider {
 
 
 function GetChildItems {
     [cmdletbinding()]
-    param(
-		[string]$path, 
-		[bool]$recurse
-    )
-    $ENV:Path.Split(";") | % { $psprovider.writeitemobject($_, $path, $false) }
-
-    $psprovider.writeverbose("GetChildItems")
-    # ...
-}
-
-function GetChildNames {
-    [cmdletbinding()]
-    param(
-		[string]$path, 
-		[Management.Automation.ReturnContainers]$returnContainers
-    )
-
-    $psprovider.writeverbose("GetChildNames")
-    # ...
-}
-function GetItem {
-    [cmdletbinding()]
-    param(
-		[string]$path
-    )
-
-    $psprovider.writeverbose("GetItem")
-    # ...
-}
-
-function HasChildItems {
-    [cmdletbinding()]
-	[outputtype('bool')]
-    param(
-		[string]$path
-    )
-
-    $psprovider.writeverbose("HasChildItems")
-    # ...
+    param([string]$path,[bool]$recurse)
+    GetEnvPathItems | % { $psprovider.writeitemobject($_, $path, $false) }
 }
 
 function IsItemContainer {
     [cmdletbinding()]
 	[outputtype('bool')]
-    param(
-		[string]$path
-    )
-    !$path
-
-    $psprovider.writeverbose("IsItemContainer")
-    # ...
+    param([string]$path)
+    ($path -eq "")
 }
-function IsValidPath {
-    [cmdletbinding()]
-	[outputtype('bool')]
-    param(
-		[string]$path
-    )
 
-    $psprovider.writeverbose("IsValidPath")
-    # ...
-}
 function ItemExists {
     [cmdletbinding()]
-	[outputtype('bool')]
-    param(
-		[string]$path
-    )
+	[outputtype('bool')]param([string]$path)
     
     $ie = ($path -eq "") -or [bool]@(GetEnvPathItems | ? { $_ -eq $path }) 
     return $ie
-    $psprovider.writeverbose("ItemExists")
-    # ...
 }
 
 function NewItem {
@@ -91,43 +42,43 @@ function NewItem {
 		[string]$itemTypeName, 
 		[Object]$newItemValue
     )
-
+    $new = @(GetEnvPathItems) + @($NewItemValue)
+    SetEnvPath $new
     $psprovider.writeverbose("NewItem")
-    # ...
 }
+
 function RemoveItem {
     [cmdletbinding()]
-    param(
-		[string]$path, 
-		[bool]$recurse
-    )
+    param([string]$path,[bool]$recurse)
     
     $new = GetEnvPathItems | ? { $_ -ne $path }
     SetEnvPath($new)
 }
 
 function RenameItem {
-    [cmdletbinding()]
-    param(
-		[string]$path, 
-		[string]$newName
-    )
+    [cmdletbinding()] param([string]$path, [string]$newName)
 
-    $psprovider.writeverbose("RenameItem")
-    # ...
 }
 
 
 function GetEnvPathItems()
 {
-    $Env:Path.Split(";")
+    $p = $Env:Path
+    if ($p)
+    {
+        $p.Split(";")
+    }
+    else
+    {
+        @()
+    }
 }
 
 function SetEnvPath([string[]]$items)
 {
     if ($items)
     {
-        $Env:Path = [string]::Join(";", $items)  
+        $Env:Path = [string]::Join(";", ( $items | Get-Unique ) )  
     }
     else
     {
@@ -138,4 +89,3 @@ function SetEnvPath([string[]]$items)
 
 });
 
-rm PATH:\c:\jruby\bin
