@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>PathProvider</id>
+    <version>1.0.1</version>
+    <title>PathProvider</title>
+    <authors>Scott Weinstein</authors>
+    <owners />
+    <projectUrl>https://github.com/ScottWeinstein/PathProvider</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A Powershell provder for the $ENV:Path var</description>
+    <summary>A Powershell provder for the $ENV:Path var</summary>
+    <language>en-US</language>
+    <tags>poweshell</tags>
+  </metadata>
+</package>

@@ -4,7 +4,7 @@ function Get-ScriptDirectory
     Split-Path $Invocation.MyCommand.Path
 }
 
-Import-Module "$(Get-ScriptDirectory)\PSProviderFramework.dll"
+Import-Module "$(Get-ScriptDirectory)\lib\PSProviderFramework.dll"
 
 if ([bool](Get-PSDrive PATHs -ErrorAction SilentlyContinue))
 {

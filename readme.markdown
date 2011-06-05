@@ -56,6 +56,6 @@ vs
 	New-Item -Path PATH:\ -Value C:\DevTools\
 
 # Install
-todo
 
-
+	nuget install PathProvider
+	edit $PROFILE and . source PathProvider.ps1
